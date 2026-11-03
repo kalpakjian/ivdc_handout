@@ -14,6 +14,8 @@
 標註慣例
     # [原文]  簡報截圖上讀得到的程式碼
     # [補完]  截圖被滾動箭頭遮住／講義省略，依框架標準介面補完
+
+簡報對應：第 7 頁（Yolo (Recommended)），四行程式，無遮擋。
 """
 
 from __future__ import annotations

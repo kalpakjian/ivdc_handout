@@ -28,6 +28,21 @@
 | `src/06_tf_cnn_mnist.py` | TF/Keras MNIST CNN，五個階段 |
 | `src/07_torch_cnn_mnist.py` | PyTorch MNIST CNN，同樣五個階段 |
 
+## 簡報頁碼對照
+
+| 頁 | 內容 | 腳本 |
+|---|---|---|
+| 2–3 | TensorFlow 物件偵測（單張圖／webcam） | `01`、`02` |
+| 4 | 模型建議（SSD MobileNet V2／EfficientDet／Faster R-CNN／YOLO） | — |
+| 5–6 | PyTorch 物件偵測（單張圖／webcam） | `03`、`04` |
+| 7 | Yolo (Recommended) ＋ 模型比較 | `05` |
+| 8–17 | TensorFlow CNN（MNIST） | `06` |
+| 18–25 | PyTorch CNN（MNIST） | `07` |
+
+25 頁裡有幾頁是重複或半截：第 8、9 頁是同一張截圖；第 16／17 與 24／25 是同一組輸出；
+第 21 頁底部兩行被裁掉；第 **2、3、5、6、18、19、22** 頁的程式碼被向下捲動箭頭遮住
+（不是 3 頁，是 7 頁）。每支腳本的 docstring 都寫了它對應哪一頁、從第幾行開始是補的。
+
 ## 安裝
 
 三條線的相依互不相容（尤其 TF 要 Python 3.11/3.12，3.15 沒有 wheel），

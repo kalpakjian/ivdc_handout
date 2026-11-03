@@ -17,6 +17,8 @@
 標註慣例
     # [原文]  簡報截圖上讀得到的程式碼
     # [補完]  截圖被滾動箭頭遮住／講義省略，依框架標準介面補完
+
+簡報對應：第 2 頁（Tensorflow for Object Detection），第 16 行以下被向下箭頭遮住。
 """
 
 from __future__ import annotations

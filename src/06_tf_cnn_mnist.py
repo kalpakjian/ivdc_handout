@@ -15,6 +15,8 @@ Python 版本
 標註慣例
     # [原文]  簡報截圖上讀得到的程式碼
     # [補完]  截圖被滾動箭頭遮住／講義省略，依框架標準介面補完
+
+簡報對應：第 8–17 頁（Tensorflow for CNN）。注意第 8 與第 9 頁是同一張截圖。
 """
 
 from __future__ import annotations
