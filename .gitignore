@@ -1,0 +1,11 @@
+# 執行產物
+out/
+data/
+runs/
+*.pt
+*.onnx
+
+# Python
+__pycache__/
+*.pyc
+.venv*/
