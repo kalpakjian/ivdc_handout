@@ -61,10 +61,14 @@ Colab 是「無螢幕、無相機、Linux、已預裝大半套件」的環境，
 ```python
 !git clone -q https://github.com/kalpakjian/ivdc_handout
 %cd ivdc_handout
-!python src/00_check_env.py --skip-camera          # 先自檢
-!python src/03_torch_object_detection_image.py --image bus.jpg --model ssdlite320
-!python src/04_torch_webcam_detection.py --video clip.mp4 --model ssdlite320   # 沒有相機就給影片
+%run src/00_check_env.py --skip-camera          # 先自檢
+%run src/03_torch_object_detection_image.py --image bus.jpg --model ssdlite320
+%run src/04_torch_webcam_detection.py --video clip.mp4 --model ssdlite320   # 沒有相機就給影片
 ```
+
+<strong>用 `%run` 不要用 `!python`。</strong> `!python` 走的是 shell 的 PATH，可能指到另一個直譯器
+（我就被咬過：筆記本 kernel 是 3.13，`!python` 卻用了系統的 3.14，於是 `No module named cv2`）。
+`%run` 一定用 kernel 那顆；`%pip` 同理，一定裝進 kernel 的環境。
 
 沒有 webcam 又需要「即時偵測」時，用一張圖合成一段影片即可：
 
