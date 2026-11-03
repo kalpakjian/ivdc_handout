@@ -54,9 +54,17 @@ Colab 是「無螢幕、無相機、Linux、已預裝大半套件」的環境，
 | `setuptools` 是 **80.10.2**（< 81） | `pkg_resources` 還在 → `tensorflow_hub` 直接可 import，**不需要 `setuptools<81`**（那是自己電腦遇到 setuptools ≥ 81 才要） |
 | **沒有 `ultralytics`** | 只有 `05_yolo_detection.py` 需要先 `!pip install -q ultralytics` |
 | **沒有 webcam、沒有 GUI** | `imshow` 自動退回存檔；`02`／`04` 加 `--video 檔案.mp4` 用影片取代攝影機，其餘流程一行不改 |
+| **沒有 `git`／GitHub 被擋** | 用 `colab/ivdc_exam_all_in_one.ipynb`（整份腳本內嵌，不用 clone）；或上傳 `ivdc_handout.zip` 後 `!unzip` |
 
-現成的筆記本：[`colab/ivdc_exam_quickstart.ipynb`](colab/ivdc_exam_quickstart.ipynb)（含環境自檢、
-六個 demo、結果顯示、以及「錯誤 → 解法」速查表）。在 Colab 裡開新筆記本：
+兩本現成的筆記本：
+
+| 筆記本 | 需要網路 | 說明 |
+|---|---|---|
+| [`colab/ivdc_exam_all_in_one.ipynb`](colab/ivdc_exam_all_in_one.ipynb) | 只下載權重／MNIST | **完全自包含**：9 支腳本用 `%%writefile` 內嵌，原封不動寫成 `src/*.py`，不需要 git clone |
+| [`colab/ivdc_exam_quickstart.ipynb`](colab/ivdc_exam_quickstart.ipynb) | 需要 GitHub | `git clone` 版，適合程式碼已經在 repo 裡、想跟著上游更新 |
+
+兩本都在「Colab 2026.10 同版本」環境（Python 3.13 / torch 2.11 / TF 2.21 / hub 0.16.1）
+用 nbclient 逐格執行過：**0 錯誤**。手動跑的話：
 
 ```python
 !git clone -q https://github.com/kalpakjian/ivdc_handout
