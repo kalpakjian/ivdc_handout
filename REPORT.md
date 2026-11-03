@@ -4,6 +4,7 @@
 > （`8 IVDC Tensorflow and Pytorch for Object Detection and CNN.pptx`）
 > 對應文章：<https://kalpakjian.github.io/2026/11/03/ivdc-tf-pytorch-object-detection-cnn/>
 > 環境基準日：2026-11
+> 線上好讀版（含三本 notebook 的 HTML 快照）：<https://kalpakjian.github.io/ivdc_handout/>
 
 ## 1. 摘要
 
