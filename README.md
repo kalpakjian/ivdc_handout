@@ -67,3 +67,34 @@ python src/07_torch_cnn_mnist.py --epochs 5
 
 每支都支援 `--no-show`（headless 機器改存檔）與 `--max-frames`（煙霧測試），
 所以 CI／沒有螢幕的機器也跑得完。
+
+## 實測（2026-11，Linux / CPU）
+
+環境：Python 3.11 與 3.14、TF 2.21.0、Keras 3.15.1、torch 2.15.0+cpu、
+torchvision 0.29.2+cpu、ultralytics 8.4.201、OpenCV 5.0.0（headless）。
+
+| 腳本 | 結果 |
+|---|---|
+| `00_check_env.py` | 抓到手上有 GUI＝無、camera 0 可用（brightness 41） |
+| `01`（bus.jpg） | person 0.861、bus 0.756、person 0.750…（門檻 0.4 共 10 個） |
+| `02`（webcam，6 幀） | 8.6 FPS，headless 存檔成功 |
+| `03`（bus.jpg，ssdlite320） | person 0.989、bus 0.985、person 0.865、person 0.624（共 4 個） |
+| `04`（webcam，ssdlite320） | 9.2 FPS，camera 0 auto-pick |
+| `05`（bus.jpg，yolov8n imgsz=640） | 6 個物件、最高信心 0.87、推論 19.8 ms（≈50 FPS） |
+| `06`（MNIST 5 epochs） | test accuracy **0.9872**、params 225,034 |
+| `07`（MNIST 2 epochs 煙霧測試） | test accuracy 0.9887、params 225,034 |
+
+對照：同一顆網路在 TF 與 torch 的參數量都是 225,034 —— 這是「架構等價」的證據，
+loss 曲線接近只能算同量級（隨機初始化一換就會漂）。
+
+## 已知坑（都寫進程式註解了）
+
+1. **`tensorflow_hub` + setuptools ≥ 81** → `ModuleNotFoundError: pkg_resources`。
+   這是 import 階段就死，訊息完全看不出跟 TF Hub 有關。
+2. **`hasattr(cv2, "imshow")` 會騙人**：headless 版函式存在、呼叫才丟 `not implemented`。
+3. **`cv2.VideoCapture(0)` 可能開得起來卻是全黑**，要量亮度；而且 index 不一定是 0。
+4. **`CAP_DSHOW` 是 Windows 專屬**，寫死會讓 Linux/macOS 每個 index 都失敗。
+5. **暖機「10 幀」不夠**（30 fps ≈ 0.33 秒），自動曝光要 1～2 秒，請用時間判斷。
+6. **torchvision 簡寫不存在**：`fasterrcnn_resnet50` 要寫 `fasterrcnn_resnet50_fpn`。
+7. **SSD 家族沒有 `model.weights`**，類別名稱要從 `WeightsEnum` 拿。
+8. **`min_size=800` 是 CPU 上的隱形稅**：720p 短邊被放大到 800，降到 400 可換 2～3 倍 FPS。
