@@ -63,27 +63,33 @@ def main(argv: list[str] | None = None) -> int:
         verbose=False,
     )
 
-    for result in results:
-        frames += 1
-        names = result.names
-        boxes = result.boxes
-        n = 0 if boxes is None else len(boxes)
-        top = 0.0 if n == 0 else float(boxes.conf.max())
+    try:
+        for result in results:
+            frames += 1
+            names = result.names
+            boxes = result.boxes
+            n = 0 if boxes is None else len(boxes)
+            top = 0.0 if n == 0 else float(boxes.conf.max())
 
-        # [補完] 速度要用 ultralytics 自己的 result.speed，不要用「總時間 / 張數」：
-        #        那樣會把模型載入與第一次 warmup 算進去（單張圖會量到 2 FPS 這種假數字）
-        infer_ms = float((getattr(result, "speed", {}) or {}).get("inference", 0.0))
-        fps = 1000.0 / infer_ms if infer_ms > 0 else 0.0
-        print(f"frame {frames:04d}: {n} 個物件, 最高信心 {top:.2f}, "
-              f"推論 {infer_ms:.1f} ms ({fps:.1f} FPS)")
+            # [補完] 速度要用 ultralytics 自己的 result.speed，不要用「總時間 / 張數」：
+            #        那樣會把模型載入與第一次 warmup 算進去（單張圖會量到 2 FPS 這種假數字）
+            infer_ms = float((getattr(result, "speed", {}) or {}).get("inference", 0.0))
+            fps = 1000.0 / infer_ms if infer_ms > 0 else 0.0
+            print(f"frame {frames:04d}: {n} 個物件, 最高信心 {top:.2f}, "
+                  f"推論 {infer_ms:.1f} ms ({fps:.1f} FPS)", flush=True)
 
-        if show:
-            continue
-        path = os.path.join(args.out_dir, f"pred_{frames - 1:04d}.jpg")
-        result.save(filename=path)  # [補完] headless 時存檔，不然什麼都看不到
+            if not show:
+                path = os.path.join(args.out_dir, f"pred_{frames - 1:04d}.jpg")
+                result.save(filename=path)  # [補完] headless 時存檔，不然什麼都看不到
 
-        if args.max_frames and frames >= args.max_frames:
-            break
+            # [補完] --max-frames 在 --show 模式下也要生效（關視窗之前先自己停）
+            if args.max_frames and frames >= args.max_frames:
+                break
+    except KeyboardInterrupt:
+        print("\n[中斷] 使用者按了 Ctrl-C")
+    except Exception as exc:
+        # 使用者直接關掉視窗時，ultralytics/cv2 會拋錯——這不是錯誤，是正常結束方式
+        print(f"\n[結束] {type(exc).__name__}: {str(exc)[:120]}")
 
     if not show:
         print(f"\n已存 {frames} 張到 {args.out_dir}/")
