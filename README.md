@@ -65,6 +65,8 @@ Colab 是「無螢幕、無相機、Linux、已預裝大半套件」的環境，
 | [`colab/ivdc_exam_all_in_one.ipynb`](colab/ivdc_exam_all_in_one.ipynb) | 只下載權重／MNIST | **完全自包含**：9 支腳本用 `%%writefile` 內嵌，原封不動寫成 `src/*.py`，不需要 git clone |
 | [`colab/ivdc_exam_quickstart.ipynb`](colab/ivdc_exam_quickstart.ipynb) | 需要 GitHub | `git clone` 版，適合程式碼已經在 repo 裡、想跟著上游更新 |
 
+不想開 Colab、只想快速看內容 → [`colab/preview/`](colab/preview) 有三本的 HTML 快照（`all_in_one`／`quickstart`／`yolo_only`）。
+
 兩本都在「Colab 2026.10 同版本」環境（Python 3.13 / torch 2.11 / TF 2.21 / hub 0.16.1）
 用 nbclient 逐格執行過：**0 錯誤**。手動跑的話：
 
