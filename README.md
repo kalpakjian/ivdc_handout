@@ -27,6 +27,7 @@
 | `src/05_yolo_detection.py` | YOLOv8（簡報標「Recommended」的四行方案） |
 | `src/06_tf_cnn_mnist.py` | TF/Keras MNIST CNN，五個階段 |
 | `src/07_torch_cnn_mnist.py` | PyTorch MNIST CNN，同樣五個階段 |
+| `bench/bench_detection.py` | 同一段畫面的偵測模型基準線（筆記 §六 那張表的來源） |
 
 ## 簡報頁碼對照
 
@@ -83,7 +84,39 @@ python src/07_torch_cnn_mnist.py --epochs 5
 每支都支援 `--no-show`（headless 機器改存檔）與 `--max-frames`（煙霧測試），
 所以 CI／沒有螢幕的機器也跑得完。
 
-## 實測（2026-11，Linux / CPU）
+## 同一段畫面的基準線
+
+要比 FPS，就得**同一張影格、同一個門檻、同一台機器**。這支腳本對每張圖跑同一批模型，
+量純推論時間，順便印「最高信心」與「≥門檻有幾個」——所以「很快但什麼都沒看到」會直接現形：
+
+```bash
+python bench/bench_detection.py --camera 0 --yolo      # 現場抓一張 1280×720 再跑
+python bench/bench_detection.py --frame frame.jpg --json out.json
+```
+
+實測（Linux / CPU / 一支 1280×720 USB 攝影機 / 門檻 0.5；畫面是洗衣機）：
+
+| 模型 | 延遲 | 速度 | 最高信心 | ≥0.5 檢出 | 猜成什麼 |
+|---|---|---|---|---|---|
+| `fasterrcnn_resnet50_fpn` | 752 ms | 1.3 FPS | 0.584 | 1 | `toilet` |
+| `fasterrcnn_resnet50_fpn` + `min_size=400` | 262 ms | 3.9 FPS | 0.494 | 0 | — |
+| `fasterrcnn_mobilenet_v3_large_fpn` | 136 ms | 7.4 FPS | 0.697 | 2 | `refrigerator`、`toilet` |
+| `fasterrcnn_mobilenet_v3_large_320_fpn` | 29 ms | 34.3 FPS | 0.464 | **0** | — |
+| `ssdlite320_mobilenet_v3_large` | 33 ms | 30.5 FPS | 0.561 | 1 | `refrigerator` |
+| `yolov8n` 640 | 23 ms | 43.2 FPS | 0.404 | **0** | `refrigerator` |
+| `yolov8n` 960 | 32 ms | 31.0 FPS | 0.253 | **0** | `refrigerator` |
+| `yolov8n` 1280 | 34 ms | 29.8 FPS | 0.394 | **0** | `toilet` |
+
+三件事：
+
+1. **最快的模型一個都沒偵測到**。洗衣機不在 COCO 的 80 類別裡，模型只能硬猜
+   （`toilet`／`refrigerator`），所以「快」跟「有用」是兩件事。
+2. **`min_size=400` 換來 2.9 倍**（752→262 ms），而這一幕本來就沒有真陽性可掉，是純賺。
+3. 這張表的「速度」是純 `model(...)` 的時間，**不含**攝影機讀取與畫框；
+   `src/04_torch_webcam_detection.py` 顯示的 9.2 FPS 是端到端（含 cv2 讀幀 + 畫框 + 存圖），
+   兩者不要混在一起比。
+
+## 逐支腳本的實測（2026-11，Linux / CPU）
 
 環境：Python 3.11 與 3.14、TF 2.21.0、Keras 3.15.1、torch 2.15.0+cpu、
 torchvision 0.29.2+cpu、ultralytics 8.4.201、OpenCV 5.0.0（headless）。
