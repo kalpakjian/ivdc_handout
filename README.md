@@ -44,6 +44,39 @@
 第 21 頁底部兩行被裁掉；第 **2、3、5、6、18、19、22** 頁的程式碼被向下捲動箭頭遮住
 （不是 3 頁，是 7 頁）。每支腳本的 docstring 都寫了它對應哪一頁、從第幾行開始是補的。
 
+## 在 Colab 上跑（考試／沒有 webcam 的環境）
+
+Colab 是「無螢幕、無相機、Linux、已預裝大半套件」的環境，跟本機差三件事：
+
+| Colab 2026.10 實際狀態 | 對這些腳本的影響 |
+|---|---|
+| Python 3.13.18、TF 2.21.0、tensorflow-hub 0.16.1、torch 2.11.0+cpu、torchvision 0.26.0+cpu、opencv 5.0.0、numpy 2.4.6 | **不用裝、不用降版**，8 支腳本在這個組合上實測全部通過 |
+| `setuptools` 是 **80.10.2**（< 81） | `pkg_resources` 還在 → `tensorflow_hub` 直接可 import，**不需要 `setuptools<81`**（那是自己電腦遇到 setuptools ≥ 81 才要） |
+| **沒有 `ultralytics`** | 只有 `05_yolo_detection.py` 需要先 `!pip install -q ultralytics` |
+| **沒有 webcam、沒有 GUI** | `imshow` 自動退回存檔；`02`／`04` 加 `--video 檔案.mp4` 用影片取代攝影機，其餘流程一行不改 |
+
+現成的筆記本：[`colab/ivdc_exam_quickstart.ipynb`](colab/ivdc_exam_quickstart.ipynb)（含環境自檢、
+六個 demo、結果顯示、以及「錯誤 → 解法」速查表）。在 Colab 裡開新筆記本：
+
+```python
+!git clone -q https://github.com/kalpakjian/ivdc_handout
+%cd ivdc_handout
+!python src/00_check_env.py --skip-camera          # 先自檢
+!python src/03_torch_object_detection_image.py --image bus.jpg --model ssdlite320
+!python src/04_torch_webcam_detection.py --video clip.mp4 --model ssdlite320   # 沒有相機就給影片
+```
+
+沒有 webcam 又需要「即時偵測」時，用一張圖合成一段影片即可：
+
+```python
+import cv2
+img = cv2.imread("bus.jpg")
+w = cv2.VideoWriter("clip.mp4", cv2.VideoWriter_fourcc(*"mp4v"), 15.0, (img.shape[1], img.shape[0]))
+for _ in range(30):
+    w.write(img)
+w.release()
+```
+
 ## 安裝
 
 三條線的相依互不相容（尤其 TF 要 Python 3.11/3.12，3.15 沒有 wheel），

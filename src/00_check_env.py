@@ -170,7 +170,11 @@ def main(argv: list[str] | None = None) -> int:
     model_paths = [name for name in ("torch", "tensorflow", "ultralytics") if name in found]
     print(f"  可用推論框架: {', '.join(model_paths) if model_paths else '（無）'}")
     print(f"  GUI: {'可以用 imshow' if gui_ok else '沒有，請走存檔模式'}")
-    print(f"  相機: {'可用' if cam_ok else '不可用' if not args.skip_camera else '未檢查'}")
+    if args.skip_camera:
+        cam_text = "未檢查（--skip-camera）"
+    else:
+        cam_text = "可用" if cam_ok else "不可用（請改用 --video 影片檔）"
+    print(f"  相機: {cam_text}")
 
     if args.strict and not (gui_ok and cam_ok):
         return 1

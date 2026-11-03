@@ -108,6 +108,8 @@ def pick_camera(preferred: int = 0, max_index: int = 6, min_brightness: float = 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="torchvision 偵測模型即時 webcam")
     parser.add_argument("--camera", type=int, default=0)
+    parser.add_argument("--video", default="",
+                        help="用影片檔當來源（Colab／伺服器沒有 webcam 時用這個）")
     parser.add_argument("--model", default="fasterrcnn_resnet50_fpn")
     parser.add_argument("--threshold", type=float, default=0.5)
     parser.add_argument("--min-size", type=int, default=None,
@@ -145,10 +147,21 @@ def main(argv: list[str] | None = None) -> int:
     categories = categories_for(resolved, model)
     transform = transforms.ToTensor()
 
-    cap = pick_camera(args.camera)
-    if cap is None:
-        print("[錯誤] 找不到有畫面的攝影機（先跑 00_check_env.py）", file=sys.stderr)
-        return 2
+    # [補完] Colab／伺服器沒有 webcam：--video 用影片檔取代攝影機，其餘流程完全一樣
+    if args.video:
+        cap = cv2.VideoCapture(args.video)
+        if not cap.isOpened():
+            print(f"[錯誤] 開不起影片: {args.video}", file=sys.stderr)
+            return 2
+        n = int(cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
+        print(f"來源: 影片 {args.video}（{n} 幀）")
+        args.warmup = 0.0
+    else:
+        cap = pick_camera(args.camera)
+        if cap is None:
+            print("[錯誤] 找不到有畫面的攝影機（先跑 00_check_env.py；"
+                  "沒有 webcam 的環境請用 --video 影片檔）", file=sys.stderr)
+            return 2
 
     show_gui = (not args.no_show) and imshow_available()
     if not show_gui:
@@ -165,11 +178,15 @@ def main(argv: list[str] | None = None) -> int:
     fps = 0.0
     count = 0
     last = time.time()
+    t_start = time.time()
     try:
         while True:
             ret, frame = cap.read()
             if not ret or frame is None:
-                print("[錯誤] 讀不到 frame", file=sys.stderr)
+                if args.video:
+                    print("影片播完")          # 影片 EOF 不是錯誤
+                else:
+                    print("[錯誤] 讀不到 frame", file=sys.stderr)
                 break
             processed += 1
 
@@ -218,7 +235,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if not show_gui:
         print(f"已存 {saved} 張到 {args.out_dir}/")
-    print(f"最後一次量到的速度: {fps:.1f} FPS")
+    # 影片很短或 --max-frames 很小時，0.5 秒的取樣窗可能還沒關過，退回平均值
+    if fps <= 0 and processed:
+        fps = processed / max(time.time() - t_start, 1e-6)
+    print(f"平均速度: {fps:.1f} FPS（{processed} 幀）")
     return 0
 
 
