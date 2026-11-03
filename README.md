@@ -3,7 +3,9 @@
 課程簡報的程式碼全是截圖（只有標題是文字層），這個目錄是把它逐頁還原成可執行檔案的成果。
 每個檔案都獨立可跑，並且用註解標出**哪一行是簡報原文、哪一行是我補的**。
 
-對應文章：[同一份課堂材料，用 TensorFlow 與 PyTorch 各跑一遍](https://kalpakjian.github.io/2026/11/03/ivdc-tf-pytorch-object-detection-cnn/)
+- 📄 **完整核對報告（勘誤 10 項、實測數據、Colab 指南）→ [REPORT.md](REPORT.md)**
+- 📓 **Colab 考試用筆記本（完全自包含）→ [colab/ivdc_exam_all_in_one.ipynb](colab/ivdc_exam_all_in_one.ipynb)**
+- 對應文章：[同一份課堂材料，用 TensorFlow 與 PyTorch 各跑一遍](https://kalpakjian.github.io/2026/11/03/ivdc-tf-pytorch-object-detection-cnn/)
 
 ## 標註慣例
 
