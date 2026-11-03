@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IVDC Lesson 8 · 25 頁教材逐頁核對報告</title>
+<style>
+  :root { --bg:#0a0e14; --panel:#111823; --line:#1e2a3a; --fg:#e6edf3; --mut:#8b9bb0;
+          --cyan:#2dd4bf; --mag:#e83e8c; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); line-height:1.72;
+         font-family:"Noto Sans TC","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif; }
+  .wrap { max-width: 900px; margin:0 auto; padding: 44px 22px 90px; }
+  a { color: var(--cyan); text-decoration:none; border-bottom:1px solid rgba(45,212,191,.35); }
+  a:hover { color:#fff; }
+  h1 { font-size:1.75rem; margin:.2em 0 .5em; }
+  h2 { font-size:1.2rem; margin:2em 0 .6em; padding-left:10px; border-left:3px solid var(--mag); }
+  h3 { font-size:1.02rem; margin:1.6em 0 .5em; color:var(--cyan); }
+  p, li { font-size:.95rem; }
+  blockquote { margin:1em 0; padding:.6em 1em; border-left:3px solid var(--line);
+               background:var(--panel); color:var(--mut); border-radius:0 8px 8px 0; }
+  code { background:#0f1621; border:1px solid var(--line); border-radius:4px;
+         padding:1px 5px; font-size:.86em; color:#b6e3ff; }
+  pre { background:#0f1621; border:1px solid var(--line); border-radius:10px;
+        padding:14px 16px; overflow-x:auto; }
+  pre code { border:0; background:none; padding:0; color:#cfe3f5; }
+  table { border-collapse:collapse; width:100%; margin:1em 0; font-size:.88rem; display:block; overflow-x:auto; }
+  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#131c28; color:var(--cyan); white-space:nowrap; }
+  tr:nth-child(even) td { background:#0d141d; }
+  hr { border:0; border-top:1px solid var(--line); margin:2.2em 0; }
+  .back { display:inline-block; margin-bottom:18px; font-size:.86rem; }
+  footer { margin-top:46px; padding-top:16px; border-top:1px solid var(--line);
+           color:var(--mut); font-size:.8rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">← 回索引</a>
+  <h1>IVDC Lesson 8（物件偵測與 CNN）· 材料還原與核對報告</h1>
+<blockquote>
+<p>對象：IVDC「電腦視覺技術應用」課程 25 頁簡報
+（<code>8 IVDC Tensorflow and Pytorch for Object Detection and CNN.pptx</code>）
+對應文章：<a href="https://kalpakjian.github.io/2026/11/03/ivdc-tf-pytorch-object-detection-cnn/">https://kalpakjian.github.io/2026/11/03/ivdc-tf-pytorch-object-detection-cnn/</a>
+環境基準日：2026-11</p>
+</blockquote>
+<h2>1. 摘要</h2>
+<p>簡報<strong>只有標題是文字層</strong>，其餘全是程式截圖。這份 repo 把它逐頁還原成 9 支可執行腳本，
+並在真機上重跑、逐頁核對文章宣稱。核對結果：</p>
+<ul>
+<li><strong>頁碼宣稱全部正確</strong>（第 2、3、5、7、8–17、18–25 頁）。</li>
+<li><strong>修正 10 項</strong>事實或推論錯誤（見 §3），其中 <strong>5 項</strong>是我自己文章裡的錯。</li>
+<li><strong>7 頁</strong>的程式碼被向下捲動箭頭遮住（原本寫「3 處」）。</li>
+<li>TensorFlow 那條線<strong>原本宣告無法驗證</strong>，後來證明可以（<code>uv run --python 3.11</code>），已補跑。</li>
+<li>速度表原本是<strong>跨基準線相除</strong>，已改成同一張影格的單一基準重測。</li>
+</ul>
+<h2>2. 簡報 25 頁對照</h2>
+<p>「↓」＝該頁程式碼截圖被向下捲動箭頭遮住。</p>
+<table>
+<thead>
+<tr>
+<th>頁</th>
+<th>標題</th>
+<th>內容</th>
+<th>狀態</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Certificate in Application…</td>
+<td>封面</td>
+<td>文字層只有封面與各頁大標題</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tensorflow for Object Detection</td>
+<td>SSD MobileNet V2 單張圖</td>
+<td><strong>↓ 第 16 行以下</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Real Time Webcam Detection</td>
+<td>TF webcam 迴圈</td>
+<td><strong>↓ 第 16 行以下</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Real Time Object Detection</td>
+<td>模型建議（SSD MobileNet V2／EfficientDet／Faster R-CNN／YOLO）</td>
+<td>純文字</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Pytorch for Object Detection</td>
+<td><code>fasterrcnn_resnet50_fpn(weights=&quot;DEFAULT&quot;)</code></td>
+<td><strong>↓ 第 12 行以下</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Real Time Webcam Detection</td>
+<td>torch webcam</td>
+<td><strong>↓ 第 13 行以下</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Yolo (Recommended)</td>
+<td>四行程式 ＋ 模型比較（含 DETR）</td>
+<td>只有 4 行</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Tensorflow for CNN</td>
+<td>匯入 ＋ 印版本</td>
+<td>—</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Tensorflow for CNN</td>
+<td>與第 8 頁完全相同</td>
+<td><strong>重複頁</strong></td>
+</tr>
+<tr>
+<td>10–12</td>
+<td>Load Data</td>
+<td><code>mnist.load_data()</code> → 形狀 → <code>reshape</code> + <code>/255.0</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>13</td>
+<td>CNN</td>
+<td>Keras <code>Sequential</code> 模型</td>
+<td>—</td>
+</tr>
+<tr>
+<td>14</td>
+<td>CNN Model Output</td>
+<td><code>compile</code> ＋ <code>fit(epochs=5, validation_split=0.1)</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>15</td>
+<td>CNN Model Output</td>
+<td>示範輸出 <code>0.95 / 0.15</code> → <code>0.99 / 0.03</code></td>
+<td>標題寫 Example output</td>
+</tr>
+<tr>
+<td>16–17</td>
+<td>Classification Result</td>
+<td><code>predict</code> ＋ <code>argmax</code>、輸出 7/7</td>
+<td>—</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Or you could use Pytorch</td>
+<td>匯入 ＋ 印版本</td>
+<td><strong>↓</strong></td>
+</tr>
+<tr>
+<td>19</td>
+<td>Load Data</td>
+<td><code>torchvision.datasets.MNIST</code></td>
+<td><strong>↓ 第 16 行以下</strong></td>
+</tr>
+<tr>
+<td>20</td>
+<td>Load Data</td>
+<td>預期輸出 60000／10000／<code>(1, 28, 28)</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>21</td>
+<td>CNN</td>
+<td><code>nn.Module</code> 版 CNN</td>
+<td>底部兩行被裁掉（不是箭頭）</td>
+</tr>
+<tr>
+<td>22</td>
+<td>CNN Model Output</td>
+<td><code>DataLoader</code> ＋ <code>CrossEntropyLoss</code> ＋ <code>Adam(lr=0.001)</code></td>
+<td><strong>↓ 第 16 行以下</strong></td>
+</tr>
+<tr>
+<td>23</td>
+<td>CNN Model Output</td>
+<td>示範輸出 <code>0.1805</code> → <code>0.0225</code></td>
+<td>標題寫 Example output</td>
+</tr>
+<tr>
+<td>24–25</td>
+<td>Classification Result</td>
+<td>torch 版推論、輸出 7/7</td>
+<td>第 25 頁與第 17 頁同</td>
+</tr>
+</tbody></table>
+<p><strong>被遮住的頁面共 7 頁</strong>：第 2、3、5、6、18、19、22。
+每一支腳本的 docstring 都寫了它對應哪一頁、從第幾行開始是「補完」。</p>
+<h2>3. 勘誤清單</h2>
+<h3>3.1 簡報沒說、但一定會踩的（5 項）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>現象</th>
+<th>正確做法</th>
+<th>證據</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>hasattr(cv2, &quot;imshow&quot;)</code> 回 <code>True</code>，但呼叫就丟 <code>(-2:Unspecified error) The function is not implemented</code></td>
+<td>要<strong>真的呼叫一次</strong>才驗得出來；<code>currentUIFramework()</code> 回空字串是徵兆</td>
+<td>OpenCV 5.0.0 headless 實測，訊息與原文一致</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>cv2.VideoCapture(0)</code> 開得起來卻是全黑</td>
+<td>逐個 index 試、量畫面平均亮度</td>
+<td>實機 camera 0 亮度 2.4／camera 2 亮度 93–110（作者機器）</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>cv2.VideoCapture(0, cv2.CAP_DSHOW)</code> 在 Linux/macOS <strong>每個 index 都失敗</strong></td>
+<td>依平台選 backend：<code>CAP_DSHOW if win32 else CAP_ANY</code></td>
+<td>Linux 實測 <code>isOpened()=False</code> vs <code>CAP_ANY=True</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>「丟 10 幀暖機」在 30 fps 只有 0.33 秒，自動曝光要 1–2 秒</td>
+<td>用時間判斷（<code>while time.time()-t0 &lt; 1.5</code>）</td>
+<td>實作邏輯計算</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>tensorflow_hub</code> import 就死：<code>No module named &#39;pkg_resources&#39;</code></td>
+<td>setuptools ≥ 81 已移除 <code>pkg_resources</code>；本機要 <code>pip install &#39;setuptools&lt;81&#39;</code></td>
+<td>setuptools 84.0.0 實測；<strong>Colab 是 80.10.2，不需要</strong></td>
+</tr>
+</tbody></table>
+<h3>3.2 我的文章寫錯的（5 項，已全部更正）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>原本寫</th>
+<th>正確</th>
+<th>怎麼發現</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>6</td>
+<td><code>optimizer=&#39;adam&#39;</code> vs <code>optim.Adam(lr=1e-3)</code>「預設學習率不同」</td>
+<td><strong>兩邊預設都是 1e-3</strong></td>
+<td>讀 API：Keras 3.15.1 = 0.001、torch = 0.001</td>
+</tr>
+<tr>
+<td>7</td>
+<td>表格用 <code>fasterrcnn_resnet50</code>／<code>fasterrcnn_mobilenet</code> 等簡寫</td>
+<td>torchvision 只有 <code>fasterrcnn_resnet50_fpn</code>、<code>fasterrcnn_mobilenet_v3_large_fpn</code>、<code>..._320_fpn</code>、<code>ssdlite320_mobilenet_v3_large</code>，簡寫會 <code>AttributeError</code></td>
+<td>讀 <code>torchvision.models.detection.faster_rcnn.__all__</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>「實測結果幾乎吻合」（TF 段）</td>
+<td>當時<strong>根本沒跑</strong>；補跑後 test accuracy <strong>0.9872</strong></td>
+<td><code>uv run --python 3.11 --with tensorflow-cpu</code> 實跑</td>
+</tr>
+<tr>
+<td>9</td>
+<td>「loss 幾乎逐位吻合，<strong>證明架構還原正確</strong>」</td>
+<td>loss 受初始化影響，不能當證據；硬證據是<strong>參數量 225,034</strong>（兩框架一致）</td>
+<td>兩邊 <code>count_params()</code> / <code>numel()</code> 實測</td>
+</tr>
+<tr>
+<td>10</td>
+<td>「實測差距 <strong>34 倍</strong>」（<code>37.4 ÷ 1.1</code>）</td>
+<td><strong>25.6 倍</strong>（1.4 → 35.8 FPS，同一張影格）；34 是跨基準線相除</td>
+<td>同場景重測（見 §4）</td>
+</tr>
+</tbody></table>
+<p>順帶更正兩處：</p>
+<ul>
+<li>「硬猜成 <code>toilet</code> 或 <strong><code>truck</code></strong>」→ 實測是 <code>toilet</code> 或 <strong><code>refrigerator</code></strong>，<code>truck</code> 沒出現過。</li>
+<li>「<strong>記 YOLO</strong>，因為速度與準確度天花板最好」→ 理由是<strong>四行程式碼</strong>；<code>ssdlite320</code> 在 <code>bus.jpg</code> 上信心
+反而更高（<code>person 0.989</code>／<code>bus 0.985</code> vs <code>0.866</code>／<code>0.873</code>），速度也幾乎相同（33.1 vs 35.8 FPS）。</li>
+</ul>
+<h2>4. 實測數據（同一張 1280×720 實機影格）</h2>
+<p>Linux / CPU、門檻 0.5、單張推論；畫面是洗衣機（不在 COCO 80 類別裡）。</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>延遲</th>
+<th>速度</th>
+<th>最高信心</th>
+<th>≥0.5 檢出</th>
+<th>猜成什麼</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fasterrcnn_resnet50_fpn</code>（簡報原版）</td>
+<td>731 ms</td>
+<td><strong>1.4 FPS</strong></td>
+<td>0.584</td>
+<td>1</td>
+<td><code>toilet</code></td>
+</tr>
+<tr>
+<td><code>fasterrcnn_resnet50_fpn</code> ＋ <code>min_size=400</code></td>
+<td>266 ms</td>
+<td>3.8 FPS</td>
+<td>0.494</td>
+<td>0</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>fasterrcnn_mobilenet_v3_large_fpn</code></td>
+<td>137 ms</td>
+<td>7.3 FPS</td>
+<td><strong>0.697</strong></td>
+<td>2</td>
+<td><code>toilet</code>、<code>refrigerator</code></td>
+</tr>
+<tr>
+<td><code>fasterrcnn_mobilenet_v3_large_320_fpn</code></td>
+<td>29 ms</td>
+<td>34.6 FPS</td>
+<td>0.464</td>
+<td><strong>0</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ssdlite320_mobilenet_v3_large</code></td>
+<td>30 ms</td>
+<td>33.1 FPS</td>
+<td>0.561</td>
+<td>1</td>
+<td><code>refrigerator</code></td>
+</tr>
+<tr>
+<td><code>yolov8n</code> 640 / 960 / 1280</td>
+<td>28/36/33 ms</td>
+<td>35.8/27.5/30.0 FPS</td>
+<td>0.404/0.253/0.394</td>
+<td><strong>0 / 0 / 0</strong></td>
+<td><code>refrigerator</code>, <code>toilet</code></td>
+</tr>
+</tbody></table>
+<p>三個結論：</p>
+<ol>
+<li><strong>最快的模型一個東西都沒偵測到</strong>——「快」跟「有用」是兩件事。</li>
+<li><strong>這一幕沒有模型答對</strong>，因為洗衣機不在 COCO 類別裡，只能硬猜。</li>
+<li><strong><code>min_size=400</code> 換來 2.7 倍</strong>（731→266 ms），而此場景本來就沒有真陽性可掉，是純賺。</li>
+</ol>
+<p>換到有答案的 <code>bus.jpg</code>（YOLOv8n，同一台機器）：</p>
+<table>
+<thead>
+<tr>
+<th><code>imgsz</code></th>
+<th>延遲</th>
+<th>速度</th>
+<th>≥0.5 檢出</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>640</td>
+<td>27.6 ms</td>
+<td>36.2 FPS</td>
+<td>4</td>
+<td><code>bus 0.873</code> ＋ <code>person 0.866 / 0.853 / 0.825</code></td>
+</tr>
+<tr>
+<td>960</td>
+<td>29.6 ms</td>
+<td>33.8 FPS</td>
+<td>4</td>
+<td>同樣四個，<code>person 0.886</code> 最高</td>
+</tr>
+<tr>
+<td>1280</td>
+<td>41.8 ms</td>
+<td>23.9 FPS</td>
+<td>6</td>
+<td>多出 <code>bus 0.690 / 0.634 / 0.542</code> <strong>三個重複框</strong></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>解析度拉高檢出更多要打折看：1280 多出來的是同一台公車被框三次，外加一個 0.289 的 <code>skateboard</code>。
+NMS 救不回重疊框。</p>
+</blockquote>
+<h2>5. 環境矩陣</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>本機（Linux，量測基準）</th>
+<th>Colab 2026.10（實測同版本重現）</th>
+<th>作者 Windows（文章中數字）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Python</td>
+<td>3.14.8 / 3.11 / 3.13</td>
+<td>3.13.18</td>
+<td>3.15.1</td>
+</tr>
+<tr>
+<td>torch / torchvision</td>
+<td>2.15.0+cpu / 0.29.2+cpu</td>
+<td><strong>2.11.0+cpu / 0.26.0+cpu</strong></td>
+<td>2.14.1+cpu / 0.29.1+cpu</td>
+</tr>
+<tr>
+<td>TensorFlow / hub</td>
+<td>2.21.0 / 0.16.1</td>
+<td>2.21.0 / 0.16.1（皆預裝）</td>
+<td>未安裝（原宣告裝不上）</td>
+</tr>
+<tr>
+<td>setuptools</td>
+<td>84（<strong>需 &lt; 81</strong>）</td>
+<td><strong>80.10.2（不需降版）</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>OpenCV</td>
+<td>5.0.0（headless）</td>
+<td>5.0.0.93</td>
+<td>5.0.0</td>
+</tr>
+<tr>
+<td>ultralytics</td>
+<td>8.4.201</td>
+<td>需 <code>%pip install</code>（未預裝）</td>
+<td>8.x</td>
+</tr>
+<tr>
+<td>webcam / GUI</td>
+<td>有相機、無 GUI</td>
+<td><strong>皆無</strong> → 用 <code>--video</code></td>
+<td>有</td>
+</tr>
+</tbody></table>
+<p>9 支腳本在「本機」與「Colab 同版本」兩套環境都完整跑過。</p>
+<h2>6. Colab 上怎麼跑</h2>
+<table>
+<thead>
+<tr>
+<th>情境</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>能連 GitHub</td>
+<td>Colab 開 <a href="colab/ivdc_exam_all_in_one.ipynb"><code>colab/ivdc_exam_all_in_one.ipynb</code></a> → Run all</td>
+</tr>
+<tr>
+<td>GitHub 被擋</td>
+<td>這個 notebook 本身就是完整程式碼（<code>%%writefile</code> 內嵌 9 支腳本），下載後上傳到 Colab 即可</td>
+</tr>
+<tr>
+<td>只能傳一個檔</td>
+<td>上傳 <code>ivdc_handout.zip</code> → <code>!unzip -q ivdc_handout.zip</code> → <code>%cd ivdc_handout</code></td>
+</tr>
+</tbody></table>
+<p><strong>三條規則</strong></p>
+<ol>
+<li>Colab <strong>沒有 webcam、沒有螢幕</strong> → <code>--video clip.mp4</code>、不要 <code>imshow</code>。</li>
+<li><strong>用 <code>%run</code>，不要用 <code>!python</code></strong> —— <code>!python</code> 走 shell 的 PATH，可能指到另一顆直譯器
+（實測踩到：kernel 是 3.13，<code>!python</code> 用了系統 3.14 → <code>No module named &#39;cv2&#39;</code>）。</li>
+<li><strong><code>setuptools</code> 不用降版</strong>（Colab 是 80.10.2）。</li>
+</ol>
+<h3>錯誤 → 解法</h3>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>解法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cv2.error ... not implemented ... GTK+</code></td>
+<td>不要 <code>imshow</code>，用 <code>--no-show</code>，圖以 <code>display(Image(...))</code> 呈現</td>
+</tr>
+<tr>
+<td><code>[錯誤] 找不到有畫面的攝影機</code></td>
+<td>Colab 沒相機 → <code>--video clip.mp4</code></td>
+</tr>
+<tr>
+<td><code>No module named &#39;ultralytics&#39;</code></td>
+<td><code>%pip install -q ultralytics</code></td>
+</tr>
+<tr>
+<td><code>No module named &#39;cv2&#39;</code> 且用了 <code>!python</code></td>
+<td>改成 <code>%run</code></td>
+</tr>
+<tr>
+<td>TF 印 <code>CUDA Runtime error ... GPU will not be used</code></td>
+<td>CPU runtime 的正常 stub，不影響結果</td>
+</tr>
+<tr>
+<td>TF-Hub 卡住</td>
+<td>首次下載約 20 MB，等它</td>
+</tr>
+<tr>
+<td>Runtime disconnected</td>
+<td><code>Runtime → Run all</code>（全部重跑 &lt; 2 分鐘）</td>
+</tr>
+</tbody></table>
+<h2>7. 驗證方式</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>方法</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>9 支腳本編譯</td>
+<td><code>python -m py_compile</code></td>
+<td>全通過</td>
+</tr>
+<tr>
+<td>腳本行為</td>
+<td>實機 / 影片 / 圖片逐支執行</td>
+<td>全通過（見各腳本 §「實測」）</td>
+</tr>
+<tr>
+<td>notebook（clone 版）</td>
+<td>nbclient + ipykernel，Colab 同版本</td>
+<td>23 格、<strong>0 錯誤</strong></td>
+</tr>
+<tr>
+<td>notebook（自包含版）</td>
+<td>同上，<strong>從空目錄</strong>（無 git、無 repo）</td>
+<td>43 格、<strong>0 錯誤</strong>；<code>%%writefile</code> 產物與 repo <strong>md5 一致</strong></td>
+</tr>
+<tr>
+<td>文章內部連結</td>
+<td><code>tools/notes-qa/check_public_links.py</code></td>
+<td>649 頁 / 19,684 連結、<strong>0 broken</strong></td>
+</tr>
+<tr>
+<td>中文粗體渲染</td>
+<td><code>tools/notes-qa/check_cjk_bold.js</code></td>
+<td>0 受影響</td>
+</tr>
+</tbody></table>
+<h2>8. 還沒驗的（誠實標記）</h2>
+<ol>
+<li><strong>Windows 專屬路徑</strong>：<code>CAP_DSHOW</code> vs <code>CAP_MSMF</code> 的實際行為，以及作者機器的原始 1.1 FPS。
+這台是 Linux，量不到；不影響任何結論（僅為平台註記）。</li>
+<li><strong>Colab GPU runtime</strong>：本報告的 Colab 驗證是在 CPU 版同版本環境做的。T4/L4 上
+<code>torch.cuda.is_available()</code> 應為 <code>True</code>（腳本 <code>07</code> 支援 <code>--device cuda</code>），未實測。</li>
+<li><strong>簡報頁碼以外的教材內容</strong>（例如講師口述）當然不在比對範圍。</li>
+</ol>
+<h2>9. 重跑</h2>
+<pre><code class="language-bash">git clone https://github.com/kalpakjian/ivdc_handout &amp;&amp; cd ivdc_handout
+python src/00_check_env.py                     # 先自檢
+python src/03_torch_object_detection_image.py --image bus.jpg --model ssdlite320
+python src/04_torch_webcam_detection.py --video clip.mp4    # 沒有相機時
+python bench/bench_detection.py --camera 0 --yolo           # 重跑 §4 那張表
+</code></pre>
+<p>TensorFlow 線若在自己電腦被 setuptools 卡住：</p>
+<pre><code class="language-bash">uv run --no-project --python 3.11 --with tensorflow-cpu \
+    --with tensorflow-hub --with &#39;setuptools&lt;81&#39; -- python src/06_tf_cnn_mnist.py
+</code></pre>
+<h2>10. 授權與出處</h2>
+<p>課程材料版權屬匯縱專業發展中心；本 repo 只還原<strong>程式碼結構</strong>與實測筆記，
+不含簡報原檔。程式碼以 MIT 授權使用。</p>
+
+  <footer>MIT License ｜ 課程簡報著作權屬匯縱專業發展中心，本 repo 只還原程式碼結構與實測筆記。</footer>
+</div>
+</body>
+</html>
