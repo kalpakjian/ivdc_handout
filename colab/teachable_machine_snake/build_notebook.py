@@ -45,6 +45,8 @@ def _lines(text: str) -> list[str]:
 INTRO = """\
 # Teachable Machine × p5.js：手勢控制貪食蛇（Colab 示範與檢查）
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kalpakjian/ivdc_handout/blob/main/colab/teachable_machine_snake/teachable_machine_snake.ipynb)
+
 對應講義：`Workshop.docx`（Computer Vision Workshop on Robotics）。
 
 **先講清楚：這個遊戲本身不能在 Colab 上玩。**
@@ -64,10 +66,17 @@ Teachable Machine 訓練手勢 → p5.js 貼上兩個檔案 → 用手勢操作�
 """
 
 SETUP = """\
-## 0. 工作目錄與前置檢查
+## 0. 取得檔案（Colab 用 `git clone`，本機直接讀）
 
-檔案預設跟這本筆記本放在同一個資料夾（GitHub 上就是如此）。
-在 Colab 裡是 `/content/...`；本機執行時就是筆記本所在目錄。
+**這一步不能省。** 從 GitHub 開 Colab 時，Colab 只把 `.ipynb` 載進來，
+`sketch.js` / `snake.js` / `validate.js` **不會**跟著出現，
+`Path.cwd()` 是 `/content`，裡面什麼都沒有 —— 直接跑下一格會全部 `MISS`。
+
+所以這裡會依序嘗試：
+
+1. 目前目錄已有 `sketch.js` → 直接使用（本機執行就是這條路）
+2. 找 `teachable_machine_snake/` 子目錄（在 repo 根目錄開筆記本時）
+3. 都沒有 → `git clone` 這個 repo（公開，不需要 token）
 """
 
 SETUP_CODE = """\
@@ -75,24 +84,43 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
-HERE = Path.cwd()
-if not (HERE / "sketch.js").exists() and (HERE / "teachable_machine_snake").is_dir():
-    HERE = HERE / "teachable_machine_snake"
+REPO = "https://github.com/kalpakjian/ivdc_handout"
+SUB = "colab/teachable_machine_snake"
+# Colab puts notebooks in /content; elsewhere use the temp dir so a stray
+# clone never lands in a drive root.
+CONTENT = Path("/content") if sys.platform == "linux" and Path("/content").is_dir() else Path(tempfile.gettempdir())
+
+
+def find_sources() -> Path | None:
+    \"\"\"Return a folder that already holds sketch.js / snake.js / validate.js.\"\"\"
+    for candidate in (Path.cwd(), Path.cwd() / "teachable_machine_snake", CONTENT / SUB):
+        if (candidate / "sketch.js").exists() and (candidate / "snake.js").exists():
+            return candidate
+    return None
+
+
+HERE = find_sources()
+if HERE is None:
+    if shutil.which("git") is None:
+        raise SystemExit("沒有 git，也沒有檔案 —— 請手動上傳 sketch.js / snake.js / validate.js")
+    target = CONTENT / "ivdc_handout"
+    if not target.exists():
+        print(f"檔案不在，clone {REPO} ...")
+        subprocess.run(["git", "clone", "-q", "--depth", "1", REPO, str(target)], check=True)
+    HERE = target / SUB
+    print(f"clone 完成 -> {HERE}")
 
 print(f"Python {sys.version.split()[0]}")
 print(f"工作目錄：{HERE}")
 print()
 
-missing = []
 for name in ("sketch.js", "snake.js", "validate.js"):
     p = HERE / name
-    ok = p.exists()
-    if not ok:
-        missing.append(name)
-    size = p.stat().st_size if ok else 0
-    print(f"  {'OK  ' if ok else 'MISS'}  {name:<12} {size:>6} bytes")
+    size = p.stat().st_size if p.exists() else 0
+    print(f"  {'OK  ' if p.exists() else 'MISS'}  {name:<12} {size:>6} bytes")
 
 node = shutil.which("node")
 print()

@@ -1,0 +1,17 @@
+fix(colab): notebook 開在 Colab 時自動取得檔案，並加上 Open in Colab 徽章
+
+從 GitHub 開 Colab 時，Colab 只載入 .ipynb，sketch.js / snake.js /
+validate.js 不會跟著出現，Path.cwd() 是 /content，裡面什麼都沒有。
+原本第 0 格只看 cwd 與子目錄，因此直接跑會全部 MISS、第 2 格驗證失敗。
+
+- 第 0 格改成三段式：cwd 有檔案就用 → 找子目錄 → 都沒有就 git clone
+  （repo 是公開的，不需要 token）
+- clone 目標用 CONTENT：Linux 且在 /content 才用該路徑，其餘用 temp dir，
+  避免在 Windows 把 clone 寫到磁碟根目錄
+- notebook 標題與 README 加上 Open in Colab 徽章
+- 新增 simulate_colab.py：在空目錄裡跑第 0 格，實際驗證自動 clone
+  真的能取得三個檔案並跑到 17/17
+
+實測兩種情境都 17/17：
+- 本機（檔案就在旁邊）：不 clone
+- 模擬 Colab（空目錄）：clone 後 17/17

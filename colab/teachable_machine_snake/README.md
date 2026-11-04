@@ -1,5 +1,7 @@
 # colab/teachable_machine_snake — 手勢控制貪食蛇（修正版）
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kalpakjian/ivdc_handout/blob/main/colab/teachable_machine_snake/teachable_machine_snake.ipynb)
+
 對應講義 **`Workshop.docx`**（Computer Vision Workshop on Robotics：
 Teachable Machine ＋ p5.js ＋ ml5.js 的手勢控制貪食蛇）。
 
@@ -17,6 +19,7 @@ Teachable Machine ＋ p5.js ＋ ml5.js 的手勢控制貪食蛇）。
 | [`teachable_machine_snake.ipynb`](teachable_machine_snake.ipynb) | Colab 版：顯示程式碼、跑驗證、下載檔案 |
 | [`build_notebook.py`](build_notebook.py) | 產生上面那本 notebook |
 | [`run_notebook_cells.py`](run_notebook_cells.py) | 在本機逐格跑 notebook（本機驗證用，可不上傳） |
+| [`simulate_colab.py`](simulate_colab.py) | 模擬 Colab 空目錄，驗證第 0 格的自動 clone |
 | `Workshop.docx` | 原始講義，原封不動 |
 
 ## 原始碼的問題
@@ -48,6 +51,10 @@ node validate.js      # 17/17 checks passed
 蛇完全沒收到方向而停在 `x=15`、反向沒擋）；修正後 **17/17**。
 
 ## 怎麼真的玩（講義 C–E 步）
+
+> **在 Colab 上只能「看程式碼 + 跑驗證 + 下載檔案」**，不能玩遊戲。
+> 按上面的 **Open in Colab** 徽章即可開啟；第 0 格會自動 `git clone` 這個 repo
+> （Colab 只載入 `.ipynb`，不會帶上其他檔案），第 2 格若沒有 Node 會先裝一顆。
 
 1. 到 <https://editor.p5js.org/> 建立新 sketch
 2. 用這裡的 `sketch.js` 取代原本的
@@ -85,6 +92,7 @@ node validate.js      # 17/17 checks passed
 cd colab/teachable_machine_snake
 python build_notebook.py          # 重新產生 .ipynb
 python run_notebook_cells.py      # 本機逐格實跑（會呼叫 node validate.js）
+python simulate_colab.py          # 模擬 Colab 空目錄，驗證自動 clone 的路徑
 ```
 
 > `colab/preview/` 的 HTML 快照目前**不含**這本 notebook（那目錄的三本才在產生清單裡）。
