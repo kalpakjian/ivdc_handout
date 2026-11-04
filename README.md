@@ -66,12 +66,15 @@ Colab 是「無螢幕、無相機、Linux、已預裝大半套件」的環境，
 | [`colab/ivdc_exam_all_in_one.ipynb`](colab/ivdc_exam_all_in_one.ipynb) | 只下載權重／MNIST | **完全自包含**：9 支腳本用 `%%writefile` 內嵌，原封不動寫成 `src/*.py`，不需要 git clone |
 | [`colab/ivdc_exam_quickstart.ipynb`](colab/ivdc_exam_quickstart.ipynb) | 需要 GitHub | `git clone` 版，適合程式碼已經在 repo 裡、想跟著上游更新 |
 
-不想開 Colab、只想快速看內容 → [`colab/preview/`](colab/preview) 有三本的 HTML 快照（`all_in_one`／`quickstart`／`yolo_only`）。
+不想開 Colab、只想快速看內容 → [`colab/preview/`](colab/preview) 有四本的 HTML 快照（`all_in_one`／`quickstart`／`yolo_only`／`teachable_machine_snake`）。
 
 另有一份不同主題的教材（Teachable Machine × p5.js 手勢控制貪食蛇）→
 [`colab/teachable_machine_snake/`](colab/teachable_machine_snake)：修正後的 `sketch.js` / `snake.js`，
-以及用 Node 無介面驗證的 notebook。**它不能在 Colab 玩**（p5.js 要瀏覽器鏡頭），
-那本 notebook 只負責顯示程式碼、跑驗證、下載檔案。
+以及用 Node 無介面驗證的 notebook
+（[**Open in Colab**](https://colab.research.google.com/github/kalpakjian/ivdc_handout/blob/main/colab/teachable_machine_snake/teachable_machine_snake.ipynb)）。
+**遊戲本身不能在 Colab 玩**（p5.js 要瀏覽器鏡頭），那本 notebook 只負責取得檔案、
+顯示程式碼、跑驗證、下載成品。
+
 
 
 兩本都在「Colab 2026.10 同版本」環境（Python 3.13 / torch 2.11 / TF 2.21 / hub 0.16.1）

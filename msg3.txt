@@ -1,0 +1,7 @@
+docs(preview): 加入 teachable_machine_snake 的 HTML 快照
+
+nbconvert --to HTML 產生的靜態版本，讓不想登入 Colab 的人也能讀內容。
+
+同時更正先前 colab/preview/README.md 的說法：原本寫「不該放」，
+但實際上放了有用（可讀），只是不能當成「跑過」的證據 —— HTML 沒有執行輸出。
+已在 README 明確標示，並補上子資料夾路徑的重新產生指令。
