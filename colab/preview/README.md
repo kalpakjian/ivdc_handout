@@ -9,6 +9,11 @@
 | `ivdc_exam_quickstart.html` | `../ivdc_exam_quickstart.ipynb`（git clone 版） |
 | `yolo_only.html` | `../yolo_only.ipynb`（只有 YOLO 的 4 格） |
 
+> ❗ `../teachable_machine_snake/teachable_machine_snake.ipynb`（手勢控制貪食蛇）**不在這裡**，
+> 也不該放：它靠 Node 執行 `validate.js`，HTML 靜態快照沒意義。
+> 要看內容請直接開 notebook，或看 `../teachable_machine_snake/README.md`。
+
+
 ## 重新產生
 
 改了 `.ipynb` 之後要一起更新（否則兩份會不一致）：

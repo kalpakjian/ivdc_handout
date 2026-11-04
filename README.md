@@ -68,6 +68,12 @@ Colab 是「無螢幕、無相機、Linux、已預裝大半套件」的環境，
 
 不想開 Colab、只想快速看內容 → [`colab/preview/`](colab/preview) 有三本的 HTML 快照（`all_in_one`／`quickstart`／`yolo_only`）。
 
+另有一份不同主題的教材（Teachable Machine × p5.js 手勢控制貪食蛇）→
+[`colab/teachable_machine_snake/`](colab/teachable_machine_snake)：修正後的 `sketch.js` / `snake.js`，
+以及用 Node 無介面驗證的 notebook。**它不能在 Colab 玩**（p5.js 要瀏覽器鏡頭），
+那本 notebook 只負責顯示程式碼、跑驗證、下載檔案。
+
+
 兩本都在「Colab 2026.10 同版本」環境（Python 3.13 / torch 2.11 / TF 2.21 / hub 0.16.1）
 用 nbclient 逐格執行過：**0 錯誤**。手動跑的話：
 
